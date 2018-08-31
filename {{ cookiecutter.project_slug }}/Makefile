@@ -60,7 +60,7 @@ init: init-docker sync-from-source ## initialize repository for traning
 sync-from-source: ## download data data source to local envrionment
 {%- if cookiecutter.data_source_type == 's3' %}
 	-aws s3 sync $(DATA_SOURCE) ./data/
-{%- elif cookiecutter.data_source_type == 'nfs' %}
+{%- elif cookiecutter.data_source_type == 'nfs or local' %}
 	cp -r $(DATA_SOURCE)/* ./data/
 {%- elif cookiecutter.data_source_type == 'url' %}
 	wget $(DATA_SOURCE) -P ./data/
