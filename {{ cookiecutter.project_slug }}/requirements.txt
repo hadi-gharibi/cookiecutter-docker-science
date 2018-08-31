@@ -2,6 +2,6 @@ awscli
 click
 matplotlib
 jupyter
-notebook
+jupyterlab
 Sphinx
 flake8
