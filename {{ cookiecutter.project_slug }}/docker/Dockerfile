@@ -1,8 +1,5 @@
-{% if cookiecutter.use_nvidia_docker == 'yes' -%}
-FROM nvidia/cuda:8.0-cudnn5-devel-ubuntu16.04
-{% else %}
+
 FROM ubuntu:16.04
-{%- endif %}
 
 RUN apt-get update --fix-missing && apt-get install -y wget bzip2 ca-certificates \
   build-essential \
@@ -14,15 +11,22 @@ RUN apt-get update --fix-missing && apt-get install -y wget bzip2 ca-certificate
   python3-pip \
   python3-dev \
   python-setuptools \
+  unzip \
   && \
 apt-get clean && \
 rm -rf /var/lib/apt/lists/*
 
+RUN echo 'export PATH=/opt/conda/bin:$PATH' > /etc/profile.d/conda.sh && \
+    wget --quiet https://repo.continuum.io/archive/Anaconda3-5.0.0.1-Linux-x86_64.sh -O ~/anaconda.sh && \
+    /bin/bash ~/anaconda.sh -b -p /opt/conda && \
+    rm ~/anaconda.sh
+
+ENV PATH /opt/conda/bin:$PATH
 
 RUN pip3 install --upgrade pip
 
 COPY ./requirements.txt /requirements.txt
-RUN pip install -r /requirements.txt
+RUN pip3 install -r /requirements.txt
 
 ARG UID
 RUN useradd docker -u $UID -s /bin/bash -m
