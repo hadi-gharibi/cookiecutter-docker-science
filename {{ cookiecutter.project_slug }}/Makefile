@@ -72,7 +72,7 @@ init-docker: ## initialize docker image
 sync-to-source: ## sync local data to data source
 {%- if cookiecutter.data_source_type == 's3' %}
 	-aws s3 sync ./data/ $(DATA_SOURCE)
-{%- elif cookiecutter.data_source_type == 'nfs' %}
+{%- elif cookiecutter.data_source_type == 'nfs or local' %}
 	cp -r ./data/* $(DATA_SOURCE)/
 {%- elif cookiecutter.data_source_type == 'url' %}
 	echo "no sync target for url data source..."
