@@ -46,20 +46,20 @@ Quick start
 
 To generate project from the cookiecutter-doccker-science template, please run the following command.
 
-``$cookiecutter git@github.com:docker-science/cookiecutter-docker-science.git``
+``$cookiecutter https://github.com/hadi-gharibi/cookiecutter-docker-science``
 
 Then the cookiecutter command ask for several questions on generated project as follows.
 
 ::
 
-    $cookiecutter git@github.com:docker-science/cookiecutter-docker-science.git
+    $cookiecutter https://github.com/hadi-gharibi/cookiecutter-docker-science
     project_name [project_name]: food-image-classification
     project_slug [food_image_classification]:
     jupyter_host_port [8888]:
     description [Please Input a short description]: Classify food images into several categories
     Select data_source_type:
     1 - s3
-    2 - nfs
+    2 - nfs or local
     3 - url
     data_source [Please Input data source]: s3://research-data/food-images
 
@@ -86,10 +86,10 @@ The following is the initial directory structure generated in the previous secti
     │   │                                    as project name. In this directory users puts python files used in scripts
     │   │                                    or Jupyter Notebook.
     │   └── __init__.py
-    ├── notebook                          <- This directory sotres the ipynb files saved in Jupyter Notebook.
+    ├── explore                          <- This directory sotres the ipynb files saved in Jupyter Notebook.
     ├── requirements.txt                  <- Libraries needed to run experiments. The library listed in this file
     │                                        are installed in the Docker container.
-    └── scripts                           <- Users add the script files to generate model files or run evaluation.
+    └── utils                           <- Users add the script files to generate model files or run evaluation.
 
 
 Makefile targets
