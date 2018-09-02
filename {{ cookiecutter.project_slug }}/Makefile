@@ -81,11 +81,14 @@ sync-to-source: ## sync local data to data source
 run-container: ## create docker container
 	$(DOCKER) run -it -v $(PWD):/work -p $(JUPYTER_HOST_PORT):$(JUPYTER_CONTAINER_PORT) --name $(CONTAINER_NAME) $(IMAGE_NAME)
 
-exec-container: ## start docker container
+exec-container: ## login docker container
+	$(DOCKER) exec -u 0 -it $(CONTAINER_NAME) bash
+
+start-container: ## start docker container
 	@echo "$$START_DOCKER_CONTAINER" | $(SHELL)
 	@echo "Launched $(CONTAINER_NAME)..."
 	$(DOCKER) start $(CONTAINER_NAME)
-
+	
 jupyter: ## start Jupyter Notebook server
 	jupyter lab --no-browser --ip=0.0.0.0 --port=${JUPYTER_CONTAINER_PORT}
 
