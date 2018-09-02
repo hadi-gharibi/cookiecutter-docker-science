@@ -16,7 +16,7 @@ for line in sys.stdin:
 endef
 
 define START_DOCKER_CONTAINER
-if [ `$(DOCKER) inspect -f {% raw -%}{{.State.Running}}{%- endraw %} $(CONTAINER_NAME)` = "false" ] ; then
+if [ `$(DOCKER) inspect -f {{.State.Running}} $(CONTAINER_NAME)` = "false" ] ; then
         $(DOCKER) start $(CONTAINER_NAME)
 fi
 endef
@@ -25,20 +25,17 @@ endef
 ## VARIABLES
 ###########################################################################################################
 
-{% if cookiecutter.use_nvidia_docker == 'yes' -%}
-export DOCKER=nvidia-docker
-{% else %}
+
 export DOCKER=docker
-{%- endif %}
 export PWD=`pwd`
 export PRINT_HELP_PYSCRIPT
 export START_DOCKER_CONTAINER
 export PYTHONPATH=$PYTHONPATH:$(PWD)
-export PROJECT_NAME={{ cookiecutter.project_slug }}
+export PROJECT_NAME=car_price_suggest
 export IMAGE_NAME=$(PROJECT_NAME)-image
 export CONTAINER_NAME=$(PROJECT_NAME)-container
-export DATA_SOURCE={{ cookiecutter.data_source }}
-export JUPYTER_HOST_PORT={{ cookiecutter.jupyter_host_port }}
+export DATA_SOURCE=Please Input data source: (skip if it's local)
+export JUPYTER_HOST_PORT=8888
 export JUPYTER_CONTAINER_PORT=8888
 export PYTHON=python3
 export DOCKERFILE=docker/Dockerfile
@@ -58,33 +55,24 @@ help:
 init: init-docker sync-from-source ## initialize repository for traning
 
 sync-from-source: ## download data data source to local envrionment
-{%- if cookiecutter.data_source_type == 's3' %}
-	-aws s3 sync $(DATA_SOURCE) ./data/
-{%- elif cookiecutter.data_source_type == 'nfs or local' %}
 	cp -r $(DATA_SOURCE)/* ./data/
-{%- elif cookiecutter.data_source_type == 'url' %}
-	wget $(DATA_SOURCE) -P ./data/
-{% endif %}
 
 init-docker: ## initialize docker image
 	$(DOCKER) build -t $(IMAGE_NAME) -f $(DOCKERFILE) --build-arg UID=$(shell id -u) .
 
 sync-to-source: ## sync local data to data source
-{%- if cookiecutter.data_source_type == 's3' %}
-	-aws s3 sync ./data/ $(DATA_SOURCE)
-{%- elif cookiecutter.data_source_type == 'nfs or local' %}
 	cp -r ./data/* $(DATA_SOURCE)/
-{%- elif cookiecutter.data_source_type == 'url' %}
-	echo "no sync target for url data source..."
-{% endif %}
 
-create-container: ## create docker container
-	$(DOCKER) run -it -v $(PWD):/work -p $(JUPYTER_HOST_PORT):$(JUPYTER_CONTAINER_PORT) --name $(CONTAINER_NAME) $(IMAGE_NAME)
+run-container: ## create docker container
+	$(DOCKER) run -it -d -v $(PWD):/work -p $(JUPYTER_HOST_PORT):$(JUPYTER_CONTAINER_PORT) --name $(CONTAINER_NAME) $(IMAGE_NAME)
+
+exec-container: ## login docker container
+	$(DOCKER) exec -u 0 -it $(CONTAINER_NAME) bash
 
 start-container: ## start docker container
 	@echo "$$START_DOCKER_CONTAINER" | $(SHELL)
 	@echo "Launched $(CONTAINER_NAME)..."
-	$(DOCKER) attach $(CONTAINER_NAME)
+	$(DOCKER) start $(CONTAINER_NAME)
 
 jupyter: ## start Jupyter Notebook server
 	jupyter lab --no-browser --ip=0.0.0.0 --port=${JUPYTER_CONTAINER_PORT}
@@ -93,7 +81,7 @@ test: ## run test cases in tests directory
 	$(PYTHON) -m unittest discover
 
 lint: ## check style with flake8
-	flake8 {{ cookiecutter.project_slug }}
+	flake8 car_price_suggest
 
 profile: ## show profile of the project
 	@echo "CONTAINER_NAME: $(CONTAINER_NAME)"
