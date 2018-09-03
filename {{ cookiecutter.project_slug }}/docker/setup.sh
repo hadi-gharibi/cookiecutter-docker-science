@@ -16,8 +16,6 @@ apt-get install -y wget bzip2 ca-certificates \
     htop \
     python3-pip \
     python-setuptools \
-    unzip \
-    python-mysqldb \
-    libmysqlclient-dev
+    unzip
 apt-get clean
 rm -rf /var/lib/apt/lists/*

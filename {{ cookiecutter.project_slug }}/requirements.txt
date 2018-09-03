@@ -1,7 +1,9 @@
 awscli
 click
 matplotlib
+seaborn
 jupyter
 jupyterlab
 Sphinx
 flake8
+
