@@ -80,7 +80,7 @@ sync-to-source: ## sync local data to data source
 
 run-container: ## create docker container
 	$(DOCKER) run -it -v $(PWD):/work -p $(JUPYTER_HOST_PORT):$(JUPYTER_CONTAINER_PORT) --name $(CONTAINER_NAME) $(IMAGE_NAME)
-
+	$(DOCKER) exec -u 0 -t $(CONTAINER_NAME) bash -c "pip install -e /work"
 exec-container: ## login docker container
 	$(DOCKER) exec -u 0 -it $(CONTAINER_NAME) bash
 
