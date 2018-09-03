@@ -91,7 +91,7 @@ start-container: ## start docker container
 	$(DOCKER) start $(CONTAINER_NAME)
 	
 jupyter: ## start Jupyter Notebook server
-	jupyter lab --no-browser --ip=0.0.0.0 --port=${JUPYTER_CONTAINER_PORT}
+	jupyter lab --no-browser --ip=0.0.0.0 --port=${JUPYTER_CONTAINER_PORT} --allow-root
 
 test: ## run test cases in tests directory
 	$(PYTHON) -m unittest discover
