@@ -8,8 +8,6 @@ apt-get install python3.6
 update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.5
 update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.6
 update-alternatives --config python3
-echo "alias pip='pip3.6'"  >> ~/.bashrc
-echo "alias python='python3.6'"  >> ~/.bashrc
 apt-get install -y wget bzip2 ca-certificates \
     build-essential \
     byobu \
