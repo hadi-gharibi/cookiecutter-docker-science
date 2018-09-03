@@ -33,4 +33,6 @@ USER docker
 VOLUME /work
 WORKDIR /work
 
+RUN pip3 install -e .
+
 ENTRYPOINT ["/bin/bash"]
